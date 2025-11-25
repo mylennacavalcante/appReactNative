@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { router } from "expo-router"
 import Campo from "../components/Campo"
 import Btn from "../components/Btn";
+import {novaTarefa} from "../components/add-tarefa";
 
 export default function App() {
   const [useDark, setDark] = useState(false)
@@ -287,7 +288,10 @@ export default function App() {
               <Text style={[styles.label, { color: colors.text }]}>Titulo</Text>
               <Campo
                 st="campo"
-                title="Digite o titlo da tarefa..."
+                title="Digite o título da tarefa..."
+                valor={titulo}
+                onPress={setTitulo}
+                color={colors.subText}
               />
               <Text style={[styles.label, { color: colors.text }]}>Status</Text>
               <View style={[styles.statusButtons]}>
@@ -353,9 +357,11 @@ export default function App() {
             </View>
 
             <View style={styles.modalFooter}>
-              <Btn title="cancelar" variant="outline" />
-              <Btn title="cancelar" variant="secondary" />
-              <Btn title="Adicoinar" />
+              <Btn 
+              title="Cancelar" 
+              variant="outline" 
+              onPress={closeModal} />
+              <Btn title="Adicionar" onPress={novaTarefa} />
             </View>
           </View>
         </View>
@@ -487,6 +493,11 @@ const styles = StyleSheet.create({
   modalBody: {
     gap: 15,
     marginBottom: 16
+  },
+  modalFooter: {
+    flexDirection : "row",
+    flex : 1,
+    gap: 8
   },
   label: {
     borderRadius: 12,
