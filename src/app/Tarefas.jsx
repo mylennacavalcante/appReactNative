@@ -14,25 +14,27 @@ import { Ionicons } from "@expo/vector-icons"
 import { router } from "expo-router"
 import Campo from "../components/Campo"
 import Btn from "../components/Btn";
-import {novaTarefa} from "../components/add-tarefa";
 
 export default function App() {
   const [useDark, setDark] = useState(false)
   const [useTask, setTask] = useState([
     { id: 1, desc: "estudar react native", status: "pendente" },
     { id: 2, desc: "estudar js", status: "emAndamento" },
-    { id: 3, desc: "estudar react native", status: "emAndamento" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
     { id: 4, desc: "estudar react native", status: "concluido" },
   ])
   const [modalVisible, setmodalVisible] = useState(false)
   const [statusTodo, setStatusTodo] = useState("pendente")
+  const [useNewTask, setNewTask] = useState("");
+
+  const addTask = () =>{
+    setTask([...useTask, {
+      id:1,
+      desc: useNewTask,
+      status:statusTodo
+    }])
+    setmodalVisible(false)
+    setNewTask("")
+}
 
   const getStatus = () => {
     const total = useTask.length
@@ -289,8 +291,8 @@ export default function App() {
               <Campo
                 st="campo"
                 title="Digite o título da tarefa..."
-                valor={titulo}
-                onPress={setTitulo}
+                valor={useNewTask}
+                onText={setNewTask}
                 color={colors.subText}
               />
               <Text style={[styles.label, { color: colors.text }]}>Status</Text>
@@ -360,8 +362,8 @@ export default function App() {
               <Btn 
               title="Cancelar" 
               variant="outline" 
-              onPress={closeModal} />
-              <Btn title="Adicionar" onPress={novaTarefa} />
+              nav={closeModal} />
+              <Btn title="Adicionar" nav={addTask} />
             </View>
           </View>
         </View>
