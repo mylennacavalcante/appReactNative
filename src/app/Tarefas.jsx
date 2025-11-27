@@ -25,10 +25,16 @@ export default function App() {
   const [modalVisible, setmodalVisible] = useState(false)
   const [statusTodo, setStatusTodo] = useState("pendente")
   const [useNewTask, setNewTask] = useState("");
+  const [removeProd, setRemoveProd] = useState([])
+
+  function deleteProd(item) {
+    let deleteItem = useTask.filter((p) => p.id !== item.id)
+    setRemoveProd(deleteItem)
+  }
 
   const addTask = () =>{
     setTask([...useTask, {
-      id:1,
+      id:useTask.length + 1,
       desc: useNewTask,
       status:statusTodo
     }])
@@ -174,11 +180,11 @@ export default function App() {
             <Text style={[{ color: colors.text }]}>Em Andamento</Text>
           </View>
 
-          <View style={[styles.statusCard, { backgroundColor: colors.cardSecondary }]}>
+          <View style={[styles.statusCard,  { backgroundColor: colors.cardSecondary }]} nav={() => deleteProd()}>
             <Ionicons
               name="ellipse-outline"
               size={24}
-              style={[{ color: colors.iconColor }]}
+              style={[{ color: colors.iconColor } ]}
             />
             <Text style={[{ color: colors.text }]}>{status.pendente}</Text>
             <Text style={[{ color: colors.text }]}>Pendente</Text>
@@ -493,7 +499,6 @@ const styles = StyleSheet.create({
     fontWeight: "700"
   },
   modalBody: {
-    gap: 15,
     marginBottom: 16
   },
   modalFooter: {
@@ -502,10 +507,9 @@ const styles = StyleSheet.create({
     gap: 8
   },
   label: {
-    borderRadius: 12,
-    borderWidth: 1,
+    fontWeight: 700,
     padding: 14,
-    fontSize: 15
+    fontSize: 18
   },
   statusButtons: {
     flexDirection: "row",
