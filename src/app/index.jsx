@@ -7,7 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"
 import { router } from "expo-router"
@@ -24,12 +25,27 @@ console.log(nome);
 export default function index() {
   const [useShowPassword, SethowPassword] = useState(false)
   const [useValue, setValue] = useState("")
+  const [useValueEmail, setValueEmail] = useState("")
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [loading, setLoading] = useState(false)
 
 
 
-  /*  npx expo install  expo-router */
-  function outratela() {
-    router.navigate("/Tarefas")
+
+  function entrar() {
+    if (useValueEmail === ""){
+      setErrorMessage("Email inválido")
+      setError(true)
+    }else if(useValue.length < 6) {
+      setError(true)
+      setErrorMessage("A senha tem que ter mais de 6 caractéres")
+    }else{
+      setLoading(true)
+      setTimeout(() => {
+        router.navigate("/Tarefas")
+      }, 6000)
+    }
   }
 
   return (
@@ -42,6 +58,8 @@ export default function index() {
           title="Email"
           color="#aaa"
           st="campo"
+          valor={useValueEmail}
+          onText={setValueEmail}
         />
         <View style={styles.passwordContainer} >
           <Campo
@@ -64,7 +82,16 @@ export default function index() {
           </TouchableOpacity>
         </View>
 
-        <Btn title="Entrar" nav={outratela} />
+        
+        {error && <Text>{errorMessage}</Text>}
+
+        {loading ? (<ActivityIndicator
+          size="small"
+          color="#ff6b00"
+          style={{marginTop: 20}} />
+      ) : (
+        <Btn title="Entrar" nav={entrar} />)
+        }
 
         <TouchableOpacity
           onPress={() => router.navigate("/Outros")}
