@@ -21,9 +21,8 @@ import { Animated } from "react-native";
 export default function App() {
   const [useDark, setDark] = useState(false)
   const [useTask, setTask] = useState([
-    { id: 1, desc: "estudar react native", status: "pendente" },
-    { id: 2, desc: "estudar js", status: "emAndamento" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
+    { id: 1, desc: "Comprar pão", status: "pendente" },
+    { id: 2, desc: "Salário", status: "emAndamento" },
   ])
   const [modalVisible, setmodalVisible] = useState(false)
   const [statusTodo, setStatusTodo] = useState("pendente")
@@ -44,10 +43,10 @@ export default function App() {
 
   const closeMenu = () => {
     Animated.timing(menuSlide, {
-      toValue: 0,
+      toValue: 300,
       duration: 250,
       useNativeDriver: false
-    }).start(() => setMenuVisible(true))
+    }).start(() => setMenuVisible(false))
   }
 
   function deleteProd(item) {
@@ -198,7 +197,13 @@ export default function App() {
               <Ionicons name="wallet" size={22} color={colors.text} />
               <Text style={[styles.menuText, { color: colors.text }]}>Financeiro</Text>
             </TouchableOpacity>
-
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={22} color={colors.text} />
+              <Text style={[styles.menuText, { color: colors.text }]}>Voltar</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/")}
@@ -213,11 +218,7 @@ export default function App() {
             style={
               [styles.headerTitle,
               { color: colors.text }]
-            }>Minhas Tarefas</Text>
-          <Text style={
-            [styles.headerSubTitle,
-            { color: colors.text }]
-          }>Organize seu dia</Text>
+            }>Financeiro</Text>
         </View>
         <TouchableOpacity>
           <Ionicons
@@ -230,52 +231,19 @@ export default function App() {
       </View>
       <ScrollView style={styles.content}>
         <View style={styles.statusContainer}>
-          <View style={[styles.statusCard, { backgroundColor: colors.cardSecondary }]}>
-            <Ionicons
-              name="list"
-              size={24}
-              style={[{ color: colors.iconColor }]}
-            />
-            <Text style={[{ color: colors.text }]}>{status.total}</Text>
-            <Text style={[{ color: colors.text }]}>total</Text>
+
+          <View style={[styles.saldo, { color: colors.bg }]}>
+            <Text>Saldo Total</Text>
+            <Text style={{ fontSize: 35, fontWeight: "700", color: "green" }}>R$ 5.000,00</Text>
           </View>
-
-          <View style={[styles.statusCard, { backgroundColor: colors.cardSecondary }]}>
-            <Ionicons
-              name="time"
-              size={24}
-              style={[{ color: colors.iconColor }]}
-            />
-            <Text style={[{ color: colors.text }]}>{status.emAndamento}</Text>
-            <Text style={[{ color: colors.text }]}>Em Andamento</Text>
-          </View>
-
-          <View style={[styles.statusCard, { backgroundColor: colors.cardSecondary }]}>
-            <Ionicons
-              name="ellipse-outline"
-              size={24}
-              style={[{ color: colors.iconColor }]}
-            />
-            <Text style={[{ color: colors.text }]}>{status.pendente}</Text>
-            <Text style={[{ color: colors.text }]}>Pendente</Text>
-          </View>
-
-          <View style={[styles.statusCard, { backgroundColor: colors.cardSecondary }]}>
-            <Ionicons
-              name="checkmark-circle"
-              size={24}
-              style={[{ color: colors.succes }]}
-            />
-            <Text style={[{ color: colors.text }]}>{status.concluido}</Text>
-            <Text style={[{ color: colors.text }]}>Concluidos</Text>
-          </View>
-
-
+        </View>
+        <View>
+          <Text style={[{ fontSize: 22, fontWeight: "700", marginBottom: 10, color: colors.text }]}>Histórico</Text>
         </View>
         <View>
           {useTask.length == 0 ?
             (
-              <Text>Nenhuma tarefa</Text>
+              <Text>Sem movimentação</Text>
             ) : (
               useTask.map((t, index) => (
                 <View
@@ -283,11 +251,6 @@ export default function App() {
                   style={[styles.todoCard, {}]}
                 >
                   <View style={[styles.todoLeft]}>
-                    <Ionicons
-                      name={getStatusIcon(t.status)}
-                      size={24}
-                      color={getStatusColors(t.status)}
-                    />
                     <View style={styles.todoInfo} >
                       <Text
                         style={[
@@ -307,15 +270,6 @@ export default function App() {
                   </View>
 
                   <View style={[styles.todoActions]}>
-                    <TouchableOpacity
-                      style={styles.actionButton}
-                    >
-                      <Ionicons
-                        name="create-outline"
-                        size={20}
-                        color={colors.accent}
-                      />
-                    </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.actionButton}
                     >
@@ -517,13 +471,20 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 20
   },
-  statusCard: {
+  saldo: {
     flex: 1,
-    minWidth: "47%",
+    width: "47%",
     borderRadius: 16,
     padding: 16,
-    alignItems: "center",
-    gap: 4
+    marginTop: 10,
+    marginBottom: 30,
+    gap: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 3, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 2
+
   },
   todoCard: {
     flexDirection: "row",
@@ -545,14 +506,18 @@ const styles = StyleSheet.create({
   },
   todoInfo: {
     flex: 1,
-    gap: 4
+    gap: 6
   },
   todoCompleted: {
     textDecorationLine: "line-through",
     opacity: 0.6
   },
+  todoTitle: {
+    fontSize: 18,
+    fontWeight: "600"
+  },
   todoStatus: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: "500"
   },
   todoActions: {
