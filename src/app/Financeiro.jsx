@@ -21,7 +21,7 @@ import { Animated } from "react-native";
 export default function App() {
   const [useDark, setDark] = useState(false)
   const [useTask, setTask] = useState([
-    { id: 1, desc: "Comprar pão", status: "pendente" },
+    { id: 1, desc: "Comprar pão", status: "concluido" },
     { id: 2, desc: "Salário", status: "emAndamento" },
   ])
   const [modalVisible, setmodalVisible] = useState(false)
@@ -48,10 +48,9 @@ export default function App() {
       useNativeDriver: false
     }).start(() => setMenuVisible(false))
   }
-
-  function deleteProd(item) {
-    let deleteItem = useTask.filter((p) => p.id !== item.id)
-    setRemoveProd(deleteItem)
+  const deleteProd = (item) => {
+    const deleteItem = useTask.filter((p) => p.id !== item.id)
+    setTask(deleteItem)
   }
 
   const addTask = () => {
@@ -73,13 +72,10 @@ export default function App() {
   }
 
 
-  const status = getStatus()
-
-
 
   const colors = useDark ?
     {
-      bg: "#0a0a0a",
+      bg: "#383838ff",
       text: "#fff",
       iconColor: "#ff6b00",
       cardSecondary: "#252525",
@@ -96,38 +92,23 @@ export default function App() {
       text: "#1a1a1a",
       iconColor: "#ff6b00",
       cardSecondary: "#F8F8F8",
-      succes: "#10b981",
+      succes: "#0c994bff",
       warning: "#f59e0b",
       accent: "#ff6b00",
       subText: "#666",
-      error: "#ef4444",
+      error: "#c42e2eff",
       card: "#fff",
       border: "#e0e0e0",
       input: "#fff"
     }
-
-  const getStatusIcon = (statusTask) => {
-    switch (statusTask) {
-      case "concluido":
-        return "checkmark-circle"
-      case "emAndamento":
-        return "time"
-      case "pendente":
-        return "ellipse-outline"
-      default:
-        return " ellipse-outline";
-    }
-  }
 
 
   const getStatusColors = (statusTask) => {
     switch (statusTask) {
       case "concluido":
         return colors.succes
-      case "emAndamento":
-        return colors.warning
       default:
-        return colors.subText;
+        return colors.error;
     }
   }
 
@@ -233,7 +214,7 @@ export default function App() {
         <View style={styles.statusContainer}>
 
           <View style={[styles.saldo, { color: colors.bg }]}>
-            <Text>Saldo Total</Text>
+            <Text style={{color:colors.subText}}>Saldo Total</Text>
             <Text style={{ fontSize: 35, fontWeight: "700", color: "green" }}>R$ 5.000,00</Text>
           </View>
         </View>
@@ -243,7 +224,7 @@ export default function App() {
         <View>
           {useTask.length == 0 ?
             (
-              <Text>Sem movimentação</Text>
+              <Text style={[styles.todoCard, {color: colors.subText}]}>Sem movimentação</Text>
             ) : (
               useTask.map((t, index) => (
                 <View
@@ -272,6 +253,7 @@ export default function App() {
                   <View style={[styles.todoActions]}>
                     <TouchableOpacity
                       style={styles.actionButton}
+                      onPress={() => deleteProd(t)}
                     >
                       <Ionicons
                         name="trash-outline"
@@ -290,7 +272,7 @@ export default function App() {
 
       <TouchableOpacity
         style={[styles.fab, { backgroundColor: colors.accent }]}
-        onPress={() => openModal()}
+        onPrets={() => openModal()}
         activeOpacity={0.8}
       >
         <Ionicons
@@ -492,10 +474,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 16,
     padding: 16,
+    marginBottom: 12,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOffset: { width: 2, height: 5 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
     elevation: 2
   },
   todoLeft: {
